@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: #09090b;
+  --color-foreground: #f4f4f5;
+  --color-sidebar: #18181b;
+  --color-active: #27272a;
+  --color-muted: #a1a1aa;
+  --color-accent: #FF6B35;
+  --color-success: #51CF66;
+  --color-error: #FF6B6B;
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans), sans-serif;
+  overflow: hidden;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
