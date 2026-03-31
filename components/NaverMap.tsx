@@ -280,7 +280,7 @@ export default function NaverMap() {
     <div className="relative flex-1 h-full">
       {clientId && (
         <Script
-          src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${clientId}`}
+          src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${clientId}`}
           strategy="afterInteractive"
           onReady={initMap}
           onError={() => {
@@ -321,7 +321,7 @@ export default function NaverMap() {
         state.routes.every((r) => r.waypoints.length === 0) && (
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none">
             <div className="bg-zinc-900/80 text-zinc-400 text-sm px-4 py-2 rounded-lg backdrop-blur">
-              지도를 클릭해서 경로를 그려보세요
+              지도를 클릭해서 경로를 그려보세요 (Ctrl+Z: 취소)
             </div>
           </div>
         )}

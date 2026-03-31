@@ -84,7 +84,7 @@ export default function RouteItem({ route, isActive }: RouteItemProps) {
 
       {/* 삭제 버튼 */}
       <button
-        className="opacity-0 group-hover:opacity-100 text-zinc-500 hover:text-error text-sm shrink-0 transition-opacity"
+        className="text-zinc-500 hover:text-error text-lg shrink-0 transition-colors"
         onClick={(e) => {
           e.stopPropagation();
           dispatch({ type: "REMOVE_ROUTE", routeId: route.id });
