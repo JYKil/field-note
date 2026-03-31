@@ -12,16 +12,13 @@ export default function Toast() {
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className="px-4 py-2 rounded-lg text-sm font-medium shadow-lg animate-[slideUp_0.3s_ease-out]"
-          style={{
-            backgroundColor:
-              toast.type === "success"
-                ? "#51CF66"
-                : toast.type === "error"
-                  ? "#FF6B6B"
-                  : "#3f3f46",
-            color: toast.type === "info" ? "#a1a1aa" : "#09090b",
-          }}
+          className={`px-4 py-2 rounded-lg text-sm font-medium shadow-lg animate-[slideUp_0.3s_ease-out] ${
+            toast.type === "success"
+              ? "bg-success text-zinc-950"
+              : toast.type === "error"
+                ? "bg-error text-zinc-950"
+                : "bg-zinc-800 text-muted"
+          }`}
         >
           {toast.message}
         </div>
