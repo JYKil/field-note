@@ -29,7 +29,7 @@ export default function RouteList() {
   }
 
   return (
-    <div className="flex flex-col gap-1 px-2">
+    <div className="flex flex-col gap-1 px-1">
       {state.routes.map((route) => (
         <RouteItem
           key={route.id}
