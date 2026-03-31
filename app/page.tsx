@@ -10,6 +10,7 @@ import Toast from "@/components/Toast";
 
 export default function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [mapDark, setMapDark] = useState(false);
 
   return (
     <ToastProvider>
@@ -36,13 +37,34 @@ export default function Home() {
             <div className="sticky top-0 bg-sidebar z-10">
               <div className="flex items-center justify-between px-4 py-4">
                 <h1 className="text-lg font-semibold">fieldNote</h1>
-                <button
-                  className="md:hidden p-1 text-zinc-400 hover:text-zinc-100 cursor-pointer"
-                  onClick={() => setSidebarOpen(false)}
-                  aria-label="사이드바 닫기"
-                >
-                  ✕
-                </button>
+                <div className="flex items-center gap-1">
+                  {/* 지도 다크모드 토글 */}
+                  <button
+                    className={`p-1.5 rounded-md cursor-pointer transition-colors ${mapDark ? "bg-zinc-700 text-zinc-100" : "text-zinc-400 hover:text-zinc-100"}`}
+                    onClick={() => setMapDark((v) => !v)}
+                    aria-label={mapDark ? "지도 라이트모드" : "지도 다크모드"}
+                    title={mapDark ? "지도 라이트모드" : "지도 다크모드"}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      {mapDark ? (
+                        <>{/* 해 아이콘 (다크모드 ON → 클릭하면 라이트로) */}
+                          <circle cx="12" cy="12" r="5" />
+                          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+                        </>
+                      ) : (
+                        /* 달 아이콘 (라이트모드 → 클릭하면 다크로) */
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                      )}
+                    </svg>
+                  </button>
+                  <button
+                    className="md:hidden p-1 text-zinc-400 hover:text-zinc-100 cursor-pointer"
+                    onClick={() => setSidebarOpen(false)}
+                    aria-label="사이드바 닫기"
+                  >
+                    ✕
+                  </button>
+                </div>
               </div>
               <Toolbar />
               <div className="border-b border-zinc-800" />
@@ -66,7 +88,7 @@ export default function Home() {
                 <path d="M3 12h18M3 6h18M3 18h18" />
               </svg>
             </button>
-            <NaverMap />
+            <NaverMap darkMode={mapDark} />
           </main>
         </div>
         <Toast />

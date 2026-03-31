@@ -65,7 +65,11 @@ function makeMarkerIcon(color: string, size: number = 8) {
   };
 }
 
-export default function NaverMap() {
+interface NaverMapProps {
+  darkMode?: boolean;
+}
+
+export default function NaverMap({ darkMode = false }: NaverMapProps) {
   const { state, dispatch } = useRoutes();
   const { showToast } = useToast();
   const [status, setStatus] = useState<MapStatus>("loading");
@@ -116,15 +120,22 @@ export default function NaverMap() {
       "click",
       ((...args: unknown[]) => {
         const e = args[0] as { coord: NLatLng };
+        const wp: Waypoint = {
+          lat: e.coord.lat(),
+          lng: e.coord.lng(),
+        };
+
+        // 루트가 하나도 없으면 자동으로 루트 생성 + 첫 웨이포인트 추가
+        if (state.routes.length === 0) {
+          dispatch({ type: "AUTO_START_ROUTE", waypoint: wp });
+          return;
+        }
+
         const activeId = state.activeRouteId;
         if (!activeId) {
           showToast("루트를 먼저 선택하세요", "info");
           return;
         }
-        const wp: Waypoint = {
-          lat: e.coord.lat(),
-          lng: e.coord.lng(),
-        };
         dispatch({ type: "ADD_WAYPOINT", routeId: activeId, waypoint: wp });
       }),
     );
@@ -132,7 +143,7 @@ export default function NaverMap() {
     return () => {
       window.naver.maps.Event.removeListener(listener);
     };
-  }, [status, state.activeRouteId, dispatch, showToast]);
+  }, [status, state.routes, state.activeRouteId, dispatch, showToast]);
 
   // 루트 변경 → 폴리라인/마커 갱신
   useEffect(() => {
@@ -327,7 +338,7 @@ export default function NaverMap() {
         )}
 
       {/* 지도 컨테이너 */}
-      <div ref={mapContainerRef} className="w-full h-full" />
+      <div ref={mapContainerRef} className={`w-full h-full ${darkMode ? "naver-map-dark" : ""}`} />
     </div>
   );
 }

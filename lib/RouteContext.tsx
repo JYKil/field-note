@@ -22,7 +22,8 @@ type Action =
   | { type: "RENAME_ROUTE"; routeId: string; name: string }
   | { type: "IMPORT_ROUTES"; routes: Route[] }
   | { type: "UNDO" }
-  | { type: "LOAD_STATE"; state: AppState };
+  | { type: "LOAD_STATE"; state: AppState }
+  | { type: "AUTO_START_ROUTE"; waypoint: Waypoint };
 
 // --- Undo 스택 ---
 interface StateWithUndo extends AppState {
@@ -196,6 +197,25 @@ export function routeReducer(
 
     case "LOAD_STATE":
       return { ...action.state, undoStack: [] };
+
+    // 루트가 없을 때 맵 클릭 시 자동으로 루트 생성 + 첫 웨이포인트 추가
+    case "AUTO_START_ROUTE": {
+      const newRoute: Route = {
+        id: crypto.randomUUID(),
+        name: "루트 1",
+        color: getRouteColor(0),
+        waypoints: [action.waypoint],
+      };
+      return {
+        ...state,
+        routes: [newRoute],
+        activeRouteId: newRoute.id,
+        undoStack: [
+          ...state.undoStack,
+          { routeId: newRoute.id, waypoint: action.waypoint },
+        ],
+      };
+    }
 
     default:
       return state;
