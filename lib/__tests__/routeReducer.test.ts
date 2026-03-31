@@ -78,7 +78,7 @@ describe("ADD_ROUTE", () => {
 
 describe("REMOVE_ROUTE", () => {
   it("활성 루트 삭제 시 첫 번째 루트로 전환", () => {
-    const state: StateWithUndo = {
+    const state = {
       routes: [
         { id: "a", name: "A", color: "#F00", waypoints: [] },
         { id: "b", name: "B", color: "#0F0", waypoints: [] },
@@ -103,7 +103,7 @@ describe("REMOVE_ROUTE", () => {
 
   it("삭제된 루트의 undoStack 항목도 제거", () => {
     const wp: Waypoint = { lat: 37, lng: 127 };
-    const state: StateWithUndo = {
+    const state = {
       routes: [
         { id: "a", name: "A", color: "#F00", waypoints: [wp] },
         { id: "b", name: "B", color: "#0F0", waypoints: [] },
@@ -119,7 +119,7 @@ describe("REMOVE_ROUTE", () => {
 
 describe("SET_ACTIVE", () => {
   it("활성 루트 정상 전환", () => {
-    const state: StateWithUndo = {
+    const state = {
       routes: [
         { id: "a", name: "A", color: "#F00", waypoints: [] },
         { id: "b", name: "B", color: "#0F0", waypoints: [] },
@@ -254,7 +254,7 @@ describe("UNDO", () => {
     const wp1: Waypoint = { lat: 37.0, lng: 127.0 };
     const wp2: Waypoint = { lat: 38.0, lng: 128.0 };
 
-    const state: StateWithUndo = {
+    const state = {
       routes: [
         { id: "r1", name: "루트", color: "#F00", waypoints: [wp1, wp2] },
       ],
@@ -285,7 +285,7 @@ describe("UNDO", () => {
     const wpA: Waypoint = { lat: 37.0, lng: 127.0 };
     const wpB: Waypoint = { lat: 38.0, lng: 128.0 };
 
-    const state: StateWithUndo = {
+    const state = {
       routes: [
         { id: "a", name: "A", color: "#F00", waypoints: [wpA] },
         { id: "b", name: "B", color: "#0F0", waypoints: [wpB] },
@@ -377,5 +377,38 @@ describe("LOAD_STATE", () => {
     expect(next.activeRouteId).toBe("loaded-1");
     // undoStack이 비어 있어야 함
     expect(next.undoStack).toHaveLength(0);
+  });
+});
+
+// --- CLEAR_ALL ---
+describe("CLEAR_ALL", () => {
+  it("모든 루트 삭제 및 activeRouteId null로 초기화", () => {
+    const state = {
+      routes: [
+        { id: "a", name: "A", color: "#F00", waypoints: [] },
+        { id: "b", name: "B", color: "#0F0", waypoints: [{ lat: 37, lng: 127 }] },
+      ],
+      activeRouteId: "a",
+      undoStack: [{ routeId: "b", waypoint: { lat: 37, lng: 127 } }],
+    };
+
+    const next = routeReducer(state, { type: "CLEAR_ALL" });
+
+    expect(next.routes).toHaveLength(0);
+    expect(next.activeRouteId).toBeNull();
+    expect(next.undoStack).toHaveLength(0);
+  });
+
+  it("이미 빈 상태에서 CLEAR_ALL 해도 정상 동작", () => {
+    const state = {
+      routes: [],
+      activeRouteId: null,
+      undoStack: [],
+    };
+
+    const next = routeReducer(state, { type: "CLEAR_ALL" });
+
+    expect(next.routes).toHaveLength(0);
+    expect(next.activeRouteId).toBeNull();
   });
 });

@@ -15,6 +15,20 @@ export default function Toolbar() {
     dispatch({ type: "ADD_ROUTE" });
   };
 
+  const handleClearAll = () => {
+    if (state.routes.length === 0) {
+      showToast("삭제할 루트가 없습니다", "info");
+      return;
+    }
+    const confirmed = window.confirm(
+      `루트 ${state.routes.length}개를 모두 삭제합니다. 이 작업은 되돌릴 수 없습니다.`,
+    );
+    if (confirmed) {
+      dispatch({ type: "CLEAR_ALL" });
+      showToast("모든 루트를 삭제했습니다", "success");
+    }
+  };
+
   const handleImport = () => {
     fileInputRef.current?.click();
   };
@@ -71,6 +85,14 @@ export default function Toolbar() {
       >
         + 새 루트
       </button>
+      {state.routes.length > 0 && (
+        <button
+          className="w-full min-h-[44px] py-2 text-sm font-medium rounded-md bg-zinc-800 text-red-400 hover:bg-red-900/30 hover:text-red-300 transition cursor-pointer"
+          onClick={handleClearAll}
+        >
+          전체 삭제
+        </button>
+      )}
       <div className="flex gap-2">
         <button
           className="flex-1 min-h-[44px] py-2 text-sm font-medium rounded-md bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition cursor-pointer"

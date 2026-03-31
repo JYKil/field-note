@@ -23,7 +23,8 @@ type Action =
   | { type: "IMPORT_ROUTES"; routes: Route[] }
   | { type: "UNDO" }
   | { type: "LOAD_STATE"; state: AppState }
-  | { type: "AUTO_START_ROUTE"; waypoint: Waypoint };
+  | { type: "AUTO_START_ROUTE"; waypoint: Waypoint }
+  | { type: "CLEAR_ALL" };
 
 // --- Undo 스택 ---
 interface StateWithUndo extends AppState {
@@ -216,6 +217,13 @@ export function routeReducer(
         ],
       };
     }
+
+    case "CLEAR_ALL":
+      return {
+        routes: [],
+        activeRouteId: null,
+        undoStack: [],
+      };
 
     default:
       return state;
