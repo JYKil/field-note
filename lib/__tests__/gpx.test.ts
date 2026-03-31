@@ -168,7 +168,7 @@ describe("generateGpx", () => {
     expect(xml).toContain('<?xml version="1.0"');
     expect(xml).toContain("<name>테스트</name>");
     expect(xml).toContain('lat="37.5"');
-    expect(xml).toContain('lon="127.0"');
+    expect(xml).toContain('lon="127"');
     expect(xml).toContain("<ele>50</ele>");
   });
 
