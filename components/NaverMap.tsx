@@ -170,7 +170,7 @@ export default function NaverMap() {
           map,
           path,
           strokeColor: route.color,
-          strokeWeight: isActive ? 3 : 2,
+          strokeWeight: isActive ? 3.5 : 2.5,
           strokeOpacity: 1,
         });
         polylinesRef.current.set(route.id, polyline);
@@ -178,7 +178,7 @@ export default function NaverMap() {
         polyline.setPath(path);
         polyline.setOptions({
           strokeColor: route.color,
-          strokeWeight: isActive ? 3 : 2,
+          strokeWeight: isActive ? 3.5 : 2.5,
           strokeOpacity: 1,
         });
       }
