@@ -66,20 +66,20 @@ export default function Toolbar() {
   return (
     <div className="flex flex-col gap-2 px-4 py-3">
       <button
-        className="w-full py-1.5 text-[13px] font-medium rounded-md bg-accent text-zinc-950 hover:brightness-110 transition cursor-pointer"
+        className="w-full min-h-[44px] py-2 text-sm font-medium rounded-md bg-accent text-zinc-950 hover:brightness-110 transition cursor-pointer"
         onClick={handleAddRoute}
       >
         + 새 루트
       </button>
       <div className="flex gap-2">
         <button
-          className="flex-1 py-1.5 text-[13px] font-medium rounded-md bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition cursor-pointer"
+          className="flex-1 min-h-[44px] py-2 text-sm font-medium rounded-md bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition cursor-pointer"
           onClick={handleImport}
         >
           GPX 불러오기
         </button>
         <button
-          className="flex-1 py-1.5 text-[13px] font-medium rounded-md bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition cursor-pointer"
+          className="flex-1 min-h-[44px] py-2 text-sm font-medium rounded-md bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition cursor-pointer"
           onClick={handleExport}
         >
           GPX 다운로드
