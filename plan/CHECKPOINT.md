@@ -36,10 +36,15 @@
 2. **loadFromStorage 스키마 검증** — `isValidRoute`/`isValidWaypoint` 검증 함수 추가. 오염된 localStorage 데이터 필터링, 전체 오염 시 초기 상태 폴백.
 3. **activeRouteId 유효성 검증** — `SET_ACTIVE`에서 존재하지 않는 routeId 무시. `loadFromStorage`에서도 activeRouteId가 실제 루트에 존재하는지 확인.
 
+## 배포
+
+- **URL:** https://field-note.vercel.app/
+- Vercel 정적 배포 완료 (main 푸시 → 자동 배포)
+
 ## 남은 작업
 
-- [ ] NCP 클라이언트 ID 발급 확인 및 환경변수 설정
-- [ ] Vercel 배포 및 NCP 도메인 등록 (localhost, *.vercel.app, 프로덕션)
+- [x] Vercel 배포
+- [ ] NCP 도메인 등록 확인 (localhost, *.vercel.app, 프로덕션)
 - [ ] 실제 브라우저 QA 테스트
 
 ## v2 고려사항 (스코프 외)
