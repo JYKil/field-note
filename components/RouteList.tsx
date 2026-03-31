@@ -43,7 +43,7 @@ export default function RouteList() {
           총 거리: {formatDistance(totalDist)}
         </div>
       )}
-      <p className="text-[11px] text-muted text-right px-3 py-1">Ctrl+Z: 취소</p>
+      <p className="hidden md:block text-[11px] text-muted text-right px-3 py-1">Ctrl+Z: 취소</p>
     </div>
   );
 }
