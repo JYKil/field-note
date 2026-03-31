@@ -35,9 +35,13 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 
   const showToast = useCallback(
     (message: string, type: ToastType = "info") => {
-      const id = nextId++;
-      setToasts((prev) => [...prev, { id, message, type }]);
-      setTimeout(() => removeToast(id), 3000);
+      setToasts((prev) => {
+        // 동일 메시지가 이미 표시 중이면 무시
+        if (prev.some((t) => t.message === message)) return prev;
+        const id = nextId++;
+        setTimeout(() => removeToast(id), 3000);
+        return [...prev, { id, message, type }];
+      });
     },
     [removeToast],
   );
