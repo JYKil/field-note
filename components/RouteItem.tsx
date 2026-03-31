@@ -84,12 +84,13 @@ export default function RouteItem({ route, isActive }: RouteItemProps) {
 
       {/* 삭제 버튼 */}
       <button
-        className="text-zinc-500 hover:text-error text-lg shrink-0 transition-colors cursor-pointer"
+        className="flex items-center justify-center w-8 h-8 min-w-[32px] text-zinc-500 hover:text-error hover:bg-zinc-700/50 rounded text-lg shrink-0 transition-colors cursor-pointer"
         onClick={(e) => {
           e.stopPropagation();
           dispatch({ type: "REMOVE_ROUTE", routeId: route.id });
         }}
         title="루트 삭제"
+        aria-label="루트 삭제"
       >
         ×
       </button>
