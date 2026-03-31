@@ -307,7 +307,7 @@ export default function NaverMap() {
           </p>
           {clientId && (
             <button
-              className="px-4 py-1.5 text-sm rounded-md bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
+              className="px-4 py-1.5 text-sm rounded-md bg-zinc-800 text-zinc-300 hover:bg-zinc-700 cursor-pointer"
               onClick={handleRetry}
             >
               다시 시도
