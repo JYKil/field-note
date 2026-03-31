@@ -29,6 +29,37 @@ interface StateWithUndo extends AppState {
   undoStack: { routeId: string; waypoint: Waypoint }[];
 }
 
+// --- 유틸 ---
+function findLastIndex<T>(arr: T[], predicate: (item: T) => boolean): number {
+  for (let i = arr.length - 1; i >= 0; i--) {
+    if (predicate(arr[i])) return i;
+  }
+  return -1;
+}
+
+function isValidWaypoint(wp: unknown): wp is Waypoint {
+  return (
+    typeof wp === "object" &&
+    wp !== null &&
+    typeof (wp as Waypoint).lat === "number" &&
+    typeof (wp as Waypoint).lng === "number" &&
+    isFinite((wp as Waypoint).lat) &&
+    isFinite((wp as Waypoint).lng)
+  );
+}
+
+function isValidRoute(r: unknown): r is Route {
+  return (
+    typeof r === "object" &&
+    r !== null &&
+    typeof (r as Route).id === "string" &&
+    typeof (r as Route).name === "string" &&
+    typeof (r as Route).color === "string" &&
+    Array.isArray((r as Route).waypoints) &&
+    (r as Route).waypoints.every(isValidWaypoint)
+  );
+}
+
 // --- Reducer ---
 export function routeReducer(
   state: StateWithUndo,
@@ -66,8 +97,16 @@ export function routeReducer(
       };
     }
 
-    case "SET_ACTIVE":
+    case "SET_ACTIVE": {
+      // 존재하지 않는 routeId면 무시
+      if (
+        action.routeId !== null &&
+        !state.routes.some((r) => r.id === action.routeId)
+      ) {
+        return state;
+      }
       return { ...state, activeRouteId: action.routeId };
+    }
 
     case "ADD_WAYPOINT": {
       return {
@@ -138,11 +177,19 @@ export function routeReducer(
       const last = state.undoStack[state.undoStack.length - 1];
       return {
         ...state,
-        routes: state.routes.map((r) =>
-          r.id === last.routeId
-            ? { ...r, waypoints: r.waypoints.slice(0, -1) }
-            : r,
-        ),
+        routes: state.routes.map((r) => {
+          if (r.id !== last.routeId) return r;
+          // undoStack의 waypoint와 일치하는 마지막 항목을 찾아서 제거
+          const idx = findLastIndex(
+            r.waypoints,
+            (wp) => wp.lat === last.waypoint.lat && wp.lng === last.waypoint.lng,
+          );
+          if (idx === -1) return r;
+          return {
+            ...r,
+            waypoints: [...r.waypoints.slice(0, idx), ...r.waypoints.slice(idx + 1)],
+          };
+        }),
         undoStack: state.undoStack.slice(0, -1),
       };
     }
@@ -176,9 +223,24 @@ function loadFromStorage(): StateWithUndo | null {
   try {
     const raw = localStorage.getItem("fieldnote-state");
     if (!raw) return null;
-    const parsed = JSON.parse(raw) as AppState;
-    if (!parsed.routes || !Array.isArray(parsed.routes)) return null;
-    return { ...parsed, undoStack: [] };
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object") return null;
+    if (!Array.isArray(parsed.routes)) return null;
+
+    // 각 Route/Waypoint 구조 검증 — 유효하지 않은 루트는 필터링
+    const validRoutes = parsed.routes.filter(isValidRoute);
+    if (validRoutes.length === 0 && parsed.routes.length > 0) return null;
+
+    // activeRouteId가 실제 루트에 존재하는지 검증
+    const activeRouteId =
+      typeof parsed.activeRouteId === "string" &&
+      validRoutes.some((r: Route) => r.id === parsed.activeRouteId)
+        ? parsed.activeRouteId
+        : validRoutes.length > 0
+          ? validRoutes[0].id
+          : null;
+
+    return { routes: validRoutes, activeRouteId, undoStack: [] };
   } catch {
     return null;
   }
