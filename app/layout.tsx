@@ -25,7 +25,8 @@ export default function RootLayout({
   return (
     <html
       lang="ko"
-      className={`${geistSans.variable} ${geistMono.variable} h-full`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full dark`}
+      style={{ colorScheme: "dark" }}
     >
       <body className="h-full">{children}</body>
     </html>
