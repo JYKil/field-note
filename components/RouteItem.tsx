@@ -45,12 +45,21 @@ export default function RouteItem({ route, isActive }: RouteItemProps) {
 
   return (
     <div
+      role="button"
+      tabIndex={0}
       className={`group flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer transition-colors ${
         isActive
           ? "bg-active ring-1 ring-zinc-700"
           : "hover:bg-zinc-800/50"
       }`}
       onClick={() => dispatch({ type: "SET_ACTIVE", routeId: route.id })}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          dispatch({ type: "SET_ACTIVE", routeId: route.id });
+        }
+      }}
+      aria-label={`루트 선택: ${route.name}`}
     >
       {/* 색상 점 */}
       <span
