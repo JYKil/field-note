@@ -4,6 +4,7 @@ import { useEffect, useRef, useCallback, useState } from "react";
 import Script from "next/script";
 import { useRoutes } from "@/lib/RouteContext";
 import { useToast } from "@/lib/ToastContext";
+import { getRouteColorForDisplay } from "@/lib/colors";
 import type { Waypoint } from "@/types/route";
 
 type MapStatus = "loading" | "ready" | "error";
@@ -170,26 +171,29 @@ export default function NaverMap({ darkMode = false }: NaverMapProps) {
     // 각 루트 업데이트
     for (const route of state.routes) {
       const isActive = route.id === state.activeRouteId;
+      const displayColor = getRouteColorForDisplay(route.color, darkMode);
       const path = route.waypoints.map(
         (wp) => new maps.LatLng(wp.lat, wp.lng),
       );
 
-      // 폴리라인
+      // 폴리라인 (다크모드 시 strokeWeight 증가)
+      const activeWeight = darkMode ? 4 : 3.5;
+      const inactiveWeight = darkMode ? 3 : 2.5;
       let polyline = polylinesRef.current.get(route.id);
       if (!polyline) {
         polyline = new maps.Polyline({
           map,
           path,
-          strokeColor: route.color,
-          strokeWeight: isActive ? 3.5 : 2.5,
+          strokeColor: displayColor,
+          strokeWeight: isActive ? activeWeight : inactiveWeight,
           strokeOpacity: 1,
         });
         polylinesRef.current.set(route.id, polyline);
       } else {
         polyline.setPath(path);
         polyline.setOptions({
-          strokeColor: route.color,
-          strokeWeight: isActive ? 3.5 : 2.5,
+          strokeColor: displayColor,
+          strokeWeight: isActive ? activeWeight : inactiveWeight,
           strokeOpacity: 1,
         });
       }
@@ -210,12 +214,12 @@ export default function NaverMap({ darkMode = false }: NaverMapProps) {
 
         if (i < existingMarkers.length) {
           existingMarkers[i].setPosition(pos);
-          existingMarkers[i].setIcon(makeMarkerIcon(route.color, isActive ? 8 : 6));
+          existingMarkers[i].setIcon(makeMarkerIcon(displayColor, isActive ? 8 : 6));
         } else {
           const marker = new maps.Marker({
             map,
             position: pos,
-            icon: makeMarkerIcon(route.color, isActive ? 8 : 6),
+            icon: makeMarkerIcon(displayColor, isActive ? 8 : 6),
             draggable: isActive,
           });
 
@@ -226,7 +230,7 @@ export default function NaverMap({ darkMode = false }: NaverMapProps) {
               index: i,
               marker,
             };
-            marker.setIcon(makeMarkerIcon(route.color, 12));
+            marker.setIcon(makeMarkerIcon(displayColor, 12));
           });
 
           // 드래그 종료
@@ -239,7 +243,7 @@ export default function NaverMap({ darkMode = false }: NaverMapProps) {
               index: draggingRef.current.index,
               waypoint: { lat: pos.lat(), lng: pos.lng() },
             });
-            marker.setIcon(makeMarkerIcon(route.color, 8));
+            marker.setIcon(makeMarkerIcon(displayColor, 8));
             draggingRef.current = null;
           });
 
@@ -260,7 +264,7 @@ export default function NaverMap({ darkMode = false }: NaverMapProps) {
 
       markersRef.current.set(route.id, existingMarkers);
     }
-  }, [state.routes, state.activeRouteId, status, dispatch]);
+  }, [state.routes, state.activeRouteId, status, dispatch, darkMode]);
 
   // fitBounds 함수 (GPX import 후 호출용으로 노출)
   useEffect(() => {
