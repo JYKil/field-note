@@ -177,8 +177,8 @@ export default function NaverMap({ darkMode = false }: NaverMapProps) {
       );
 
       // 폴리라인 (다크모드 시 strokeWeight 증가)
-      const activeWeight = darkMode ? 4 : 3.5;
-      const inactiveWeight = darkMode ? 3 : 2.5;
+      const activeWeight = darkMode ? 5 : 3.5;
+      const inactiveWeight = darkMode ? 3.5 : 2.5;
       let polyline = polylinesRef.current.get(route.id);
       if (!polyline) {
         polyline = new maps.Polyline({

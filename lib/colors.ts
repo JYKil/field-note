@@ -8,14 +8,14 @@ export const ROUTE_COLORS = [
   "#FFD43B", // 노랑
 ] as const;
 
-// 다크모드용 보상 색상 (CSS 필터 brightness(0.55) saturate(0.3) 보상)
+// 다크모드용 형광 색상 (CSS 필터 brightness(0.55) saturate(0.3) 적용 후에도 선명하게 보이도록)
 export const ROUTE_COLORS_DARK = [
-  "#FFA050", // 주황 (밝게)
-  "#7DC8FF", // 파랑 (밝게)
-  "#7AFF8A", // 초록 (밝게)
-  "#E08AFF", // 보라 (밝게)
-  "#FF9090", // 빨강 (밝게)
-  "#FFE870", // 노랑 (밝게)
+  "#FF6F00", // 형광 오렌지
+  "#00E5FF", // 형광 시안
+  "#00FF41", // 형광 그린
+  "#E040FB", // 형광 마젠타
+  "#FF1744", // 형광 레드
+  "#FFEA00", // 형광 옐로
 ] as const;
 
 export function getRouteColor(index: number): string {
